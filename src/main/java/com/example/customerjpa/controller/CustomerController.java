@@ -1,24 +1,19 @@
 package com.example.customerjpa.controller;
 
 import com.example.customerjpa.entity.Customer;
-import com.example.customerjpa.exception.ErrorRespone;
-import com.example.customerjpa.exception.NotFoundException;
 import com.example.customerjpa.service.CustomerService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping("/customer")
@@ -27,29 +22,34 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findByCustomerId(@PathVariable int id) {
+        Customer customer = customerService.getCustomerById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(customer);
+    }
+
     @GetMapping("")
-    public List<Customer> getCustomers() {
-        return customerService.getCustomers();
+    public ResponseEntity<?> getCustomers() {
+        List<Customer> customers = customerService.getCustomers();
+        return ResponseEntity.status(HttpStatus.OK).body(customers);
     }
 
     @PostMapping("")
-    public Customer addCustomer(@RequestBody Customer customer) {
-        return customerService.addCustomer(customer);
-    }
-
-    @GetMapping("/id")
-    public Customer findById(@RequestParam(value = "id") int id) {
-        return customerService.getCustomerById(id);
+    public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
+        Customer tempCustomer = customerService.addCustomer(customer);
+        return ResponseEntity.status(HttpStatus.OK).body(tempCustomer);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteById(@PathVariable(value = "id") int id){
-        return customerService.deleteCustomer(id);
+    public ResponseEntity<?> deleteByCustomerId(@PathVariable(value = "id") int id){
+        customerService.deleteCustomer(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("")
-    public Customer updateCustomer(@RequestBody Customer customer) {
-        return customerService.updateCustomer(customer.getId(), customer.getName(), customer.getEmail());
+    public ResponseEntity<?> updateCustomer(@RequestBody Customer customer) {
+        Customer tempCustomer = customerService.updateCustomer(customer.getId(), customer.getName(), customer.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(tempCustomer);
     }
 
 }

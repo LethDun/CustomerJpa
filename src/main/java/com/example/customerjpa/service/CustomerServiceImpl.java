@@ -22,7 +22,7 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public Customer getCustomerById(int id) {
         return customerRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Id not found"));
+            .orElseThrow(() -> new NotFoundException("Customer Id not found: ID = " + id));
     }
 
     @Override
@@ -31,10 +31,8 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public boolean deleteCustomer(int id) {
-        getCustomerById(id);
+    public void deleteCustomer(int id) {
         customerRepository.deleteById(id);
-        return true;
     }
 
     @Override
