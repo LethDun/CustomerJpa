@@ -3,27 +3,37 @@ package com.example.customerjpa.service;
 import com.example.customerjpa.entity.CustomerDetail;
 import com.example.customerjpa.exception.NotFoundException;
 import com.example.customerjpa.repository.CustomerDetailRepository;
+import com.example.customerjpa.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CustomerDetailServiceImpl implements CustomerDetailService{
 
     @Autowired
     private CustomerDetailRepository customerDetailRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @Override
     public CustomerDetail addCustomerDetail(int id, CustomerDetail customerDetail) {
-        CustomerDetail _customerDetail = new CustomerDetail();
-        _customerDetail.setId(id);
-        _customerDetail.setAge(customerDetail.getAge());
-        _customerDetail.setAddress(customerDetail.getAddress());
-        return customerDetailRepository.save(_customerDetail);
+        return customerRepository.findById(id)
+            .map(customer -> {
+                customerDetail.setCustomer(customer);
+                return customerDetailRepository.save(customerDetail);
+            })
+            .orElseThrow(() -> new NotFoundException("Cannot find Customer ID = " + id));
     }
 
     @Override
-    public void deleleteCustomerDetailById(int id) {
-        customerDetailRepository.deleteById(id);
+    public void deleteCustomerDetailById(int id) {
+        if (!customerRepository.existsById(id)) {
+            throw new NotFoundException("Cannot find Customer ID = " + id);
+        }
+        customerDetailRepository.deleteByCustomerId(id);
     }
 
     @Override

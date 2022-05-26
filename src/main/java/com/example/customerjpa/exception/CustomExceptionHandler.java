@@ -10,9 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleException(NotFoundException e){
+    public ResponseEntity<?> handleNotFoundException(NotFoundException e){
         ErrorRespone err = new ErrorRespone(HttpStatus.NOT_FOUND, e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleInternalException(Exception e) {
+        ErrorRespone err = new ErrorRespone(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
 
 }

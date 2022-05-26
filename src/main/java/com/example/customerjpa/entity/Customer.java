@@ -1,13 +1,17 @@
 package com.example.customerjpa.entity;
 
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +37,18 @@ public class Customer {
     @Column(name = "customer_email")
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
+    @OneToOne(
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL,
+        mappedBy = "customer"
+    )
+    @PrimaryKeyJoinColumn
     private CustomerDetail customerDetail;
+
+    @OneToMany(
+        mappedBy = "customer",
+        fetch = FetchType.LAZY
+    )
+    private Set<Order> orders;
+
 }

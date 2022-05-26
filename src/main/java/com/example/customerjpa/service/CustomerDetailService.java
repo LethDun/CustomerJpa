@@ -6,7 +6,7 @@ public interface CustomerDetailService {
 
     CustomerDetail addCustomerDetail(int id, CustomerDetail customerDetail);
 
-    void deleleteCustomerDetailById(int id);
+    void deleteCustomerDetailById(int id);
 
     CustomerDetail updateCustomerDetail(int id, CustomerDetail customerDetail);
 

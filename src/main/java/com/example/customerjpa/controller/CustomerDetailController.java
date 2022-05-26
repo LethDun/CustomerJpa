@@ -41,7 +41,7 @@ public class CustomerDetailController {
 
     @DeleteMapping("/{id}/detail")
     public ResponseEntity<?> removeCustomerDetail(@PathVariable int id) {
-        customerDetailService.deleleteCustomerDetailById(id);
+        customerDetailService.deleteCustomerDetailById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -1,8 +1,12 @@
 package com.example.customerjpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +31,10 @@ public class CustomerDetail {
     @Column(name = "customer_address")
     private String address;
 
-    public CustomerDetail(int age, String address) {
-        this.age = age;
-        this.address = address;
-    }
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "customer_id")
+    @JsonIgnore
+    private Customer customer;
+
 }
